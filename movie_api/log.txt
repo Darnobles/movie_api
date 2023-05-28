@@ -1,0 +1,39 @@
+const http = require('http'),
+  fs = require('fs'),
+  url = require('url');
+
+http.createServer((request, response) => {
+  let addr = request.url,
+    q = url.parse(addr, true),
+    filePath = '';
+
+  fs.appendFile('log.txt', 'URL: ' + addr + '\nTimestamp: ' + new Date() + '\n\n', (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Added to log.');
+    }
+  });
+
+  if (q.pathname.includes('documentation')) {
+    filePath = (__dirname + '/documentation.html');
+  } else {
+    filePath = 'index.html';
+  }
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      throw err;
+    }
+
+    response.writeHead(200, { 'Content-Type': 'text/html' });
+    response.write(data);
+    response.end();
+
+  });
+
+}).listen(8080);
+console.log('My test server is running on Port 8080.');::1 - - [24/May/2023:21:44:28 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+::1 - - [27/May/2023:02:44:32 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8080/movies" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+::1 - - [27/May/2023:03:00:22 +0000] "GET /secreturl HTTP/1.1" 200 51 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+::1 - - [27/May/2023:03:00:42 +0000] "GET /secreturl HTTP/1.1" 200 51 "-" "PostmanRuntime/7.32.2"
