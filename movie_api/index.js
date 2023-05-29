@@ -78,6 +78,38 @@ app.get('/secreturl', (req, res) => {
     res.send('This is a secret url with super top-secret content.');
 });
 
+app.get('/moviedata', (req, res) => {
+    res.send('This is data regrading movies.');
+});
+
+app.get('/genre', (req, res) => {
+    res.send('This shows the movie genre.');
+});
+
+app.get('/director', (req, res) => {
+    res.send('This shows information about the director.');
+});
+
+app.post('/register', (req, res) => {
+    res.send('This is where you register.');
+});
+
+app.put('/update', (req, res) => {
+    res.send('This is where you update your information.');
+});
+
+app.put('/addfavorite', (req, res) => {
+    res.send('Add a favorite movie.');
+});
+
+app.delete('/deletefavorite', (req, res) => {
+    res.send('Delete a favorite movie.');
+});
+
+app.delete('/deregister', (req, res) => {
+    res.send('This is where you deregister.');
+});
+
 app.listen(8080, () => {
     console.log('Your app is listening on port 8080.');
 });
