@@ -209,10 +209,19 @@ app.get('/', (req, res) => {
     res.send('Welcome to Comic Flick!');
 });
 
+//get all movies
 app.get('/movies', (req, res) => {
-    res.json(topMovies);
+    Movies.find()
+      .then((movies) => {
+        res.status(201).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
 });
 
+//get movie by title
 app.get("/movies/:title", (req, res) => {
     const { title } = req.params;
     const movie = movies.find((movie) => movie.title === title);
@@ -224,6 +233,7 @@ app.get("/movies/:title", (req, res) => {
     }
   });
 
+//get movies by genre name
 app.get("/movies/genres/:genreName", (req, res) => {
     const { genreName } = req.params;
     const genre = movies.find((movie) => movie.genres.name === genreName).genres;
@@ -234,7 +244,8 @@ app.get("/movies/genres/:genreName", (req, res) => {
       res.status(404).send("Could not find that genre.");
     }
   });
-  
+
+//find movie by director name
 app.get("/movies/directors/:directorName", (req, res) => {
     const { directorName } = req.params;
     const director = movies.find(
