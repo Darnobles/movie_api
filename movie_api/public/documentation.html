@@ -29,7 +29,7 @@
                 <td>None</td>
             </tr>
             <tr>
-                <td>Get data about movies</td>
+                <td>Get data about all movies</td>
                 <td>/movies</td>
                 <td>GET</td>
                 <td>None</td>
@@ -43,28 +43,28 @@
                 </td>
             </tr>
             <tr>
-                <td>Get data about a movie</td>
+                <td>Get data about a movie by movie title</td>
                 <td>/movies/:title</td>
                 <td>GET</td>
                 <td>None</td>
                 <td>None</td>
-                <td>None</td>
+                <td>json</td>
             </tr>
             <tr>
-                <td>Get data about genre</td>
+                <td>Get movies by genre name</td>
                 <td>/movies/genres/:genreName</td>
                 <td>GET</td>
                 <td>None</td>
                 <td>None</td>
-                <td>None</td>
+                <td>json</td>
             </tr>
             <tr>
-                <td>Get data about a director</td>
+                <td>Get movies by director's name</td>
                 <td>/movies/directors/:directorName</td>
                 <td>GET</td>
                 <td>None</td>
                 <td>None</td>
-                <td>None</td>
+                <td>json</td>
             </tr>
             <tr>
                 <td>Allow new users to register</td>
@@ -72,23 +72,23 @@
                 <td>POST</td>
                 <td>None</td>
                 <td>None</td>
-                <td>None</td>
+                <td>json</td>
             </tr>
             <tr>
-                <td>Allow users to update their info</td>
-                <td>/users/:id</td>
+                <td>Allow users to update their info by username</td>
+                <td>/users/:Username</td>
                 <td>PUT</td>
                 <td>None</td>
                 <td>None</td>
-                <td>None</td>
+                <td>json</td>
             </tr>
             <tr>
                 <td>Allow users to add a movie to their favorites</td>
-                <td>/users/:id/:movieTitle</td>
-                <td>PUT</td>
+                <td>/users/:Username/movies/:MovieID</td>
+                <td>POST</td>
                 <td>None</td>
                 <td>None</td>
-                <td>None</td>
+                <td>json</td>
             </tr>
             <tr>
                 <td>Allows users to delete a movie from their favorites</td>
@@ -96,15 +96,15 @@
                 <td>DELETE</td>
                 <td>None</td>
                 <td>None</td>
-                <td>None</td>
+                <td>json</td>
             </tr>
             <tr>
                 <td>Allow an existing user to deregister</td>
-                <td>/users/:id</td>
+                <td>/users/:Username</td>
                 <td>DELETE</td>
                 <td>None</td>
                 <td>None</td>
-                <td>None</td>
+                <td>json</td>
             </tr>
         </table>
     </body>
