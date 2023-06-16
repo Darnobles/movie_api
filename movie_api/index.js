@@ -11,6 +11,11 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.static("public"));
+app.use(express.json());
+app.use(morgan("tiny"));
+
+
 
 const uuid = require('uuid');
 const fs = require('fs');
@@ -39,10 +44,6 @@ let users = [
     },
   ];
 
-app.use(express.static("public"));
-app.use(express.json());
-app.use(morgan("tiny"));
-app.use(bodyParser.json());
 
 let topMovies = [
     {
@@ -224,13 +225,18 @@ app.get('/movies', (req, res) => {
 //get movie by title
 app.get("/movies/:title", (req, res) => {
     const { title } = req.params;
-    const movie = movies.find((movie) => movie.title === title);
-  
-    if (movie) {
-      res.status(200).json(movie);
-    } else {
-      res.status(404).send("Could not find that movie.");
-    }
+    Movies.findOne({ title: title})
+    .then((movie) => {
+      if (movie) {
+        res.status(200).json(movie);
+      } else {
+        res.status(404).send("Could not find that movie");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
   });
 
 //get movies by genre name
@@ -248,15 +254,17 @@ app.get("/movies/genres/:genreName", (req, res) => {
 //find movie by director name
 app.get("/movies/directors/:directorName", (req, res) => {
     const { directorName } = req.params;
-    const director = movies.find(
-      (movie) => movie.directors.name === directorName
-    ).directors;
-  
-    if (director) {
-      res.status(200).json(director);
-    } else {
-      res.status(404).send("Could not find director.");
-    }
+    Movies.findOne({ "directors.name": directorName})
+    .then((movie) => {
+      if (movie) {res.status(200).json(movie);
+      } else {
+        res.status(404).send("Could not find director.");
+      }
+    })
+    .catch((err) => {
+      console. error(err);
+      res.status(500).send("Error: " + err);
+    });
   });
 
 //add a user
@@ -351,7 +359,7 @@ app.get('/users', (req, res) => {
 app.delete("/users/:id/:movieTitle", (req, res) => {
   const { id, movieTitle } = req.params;
 
-  let user = users.find((user) => user.id == id);
+  let user = users.findOneAndDelete((user) => user.id == id);
 
   if (user) {
     user.favoriteMovie = user.favoriteMovie.filter(
