@@ -11,6 +11,11 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
+
 app.use(express.static("public"));
 app.use(express.json());
 app.use(morgan("tiny"));
@@ -225,7 +230,7 @@ app.get('/movies', (req, res) => {
 //get movie by title
 app.get("/movies/:title", (req, res) => {
     const { title } = req.params;
-    Movies.findOne({ title: title})
+    Movies.findOne({ Title: req.params.Title})
     .then((movie) => {
       if (movie) {
         res.status(200).json(movie);
@@ -274,7 +279,7 @@ app.post("/users", (req, res) => {
       if (user) {
         return res.status(400).send(req.body.Username + 'already exisits');
       } else {
-        User
+        user
           .create({
             Username: req.body.Username,
             Password: req.body.Password,
