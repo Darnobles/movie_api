@@ -16,7 +16,12 @@ mongoose.connect('mongodb://localhost:27017/cfDB',
 });
 
 app.use(bodyParser.json());
+let auth = require('./auth')(app);
+
 app.use(bodyParser.urlencoded({extended:true}));
+
+const passport = require('passport');
+require('./passport');
 
 const accessLogScream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {
   flags: 'a'
@@ -32,7 +37,7 @@ app.get('/', (req, res) => {
 });
 
 //get all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
       .then((movies) => {
         res.status(201).json(movies);
@@ -44,7 +49,8 @@ app.get('/movies', (req, res) => {
 });
 
 //get movie by title
-app.get("/movies/:title", (req, res) => {
+app.get("/movies/:title", passport.authenticate('jwt', { session: false }), 
+(req, res) => {
     const { title } = req.params;
     Movies.findOne({ Title: req.params.title})
     .then((movie) => {
@@ -61,7 +67,8 @@ app.get("/movies/:title", (req, res) => {
   });
 
 //get movies by genre name
-app.get('/movies/genres/:genreName', (req, res) => {
+app.get('/movies/genres/:genreName', passport.authenticate('jwt', { session: false }), 
+(req, res) => {
   Movies.find({ 'Genre.Name': req.params.genreName })
     .then((movies) => {
       res.status(200).json(movies);
@@ -72,7 +79,8 @@ app.get('/movies/genres/:genreName', (req, res) => {
   });
 
 //find movie by director name
-app.get('/movies/directors/:directorsName', (req, res) => {
+app.get('/movies/directors/:directorsName', passport.authenticate('jwt', { session: false }), 
+(req, res) => {
   Movies.find({ 'Director.Name': req.params.directorsName })
     .then((movies) => {
       res.status(200).json(movies);
@@ -83,7 +91,8 @@ app.get('/movies/directors/:directorsName', (req, res) => {
 });
 
 //add a user
-app.post('/users', (req, res) => {
+app.post('/users', passport.authenticate('jwt', { session: false }), 
+(req, res) => {
   Users.findOne({ Username: req.body.Username }).then((user) => {
     if (user) {
       return res.status(400).send(req.body.Username + 'already exists');
@@ -106,7 +115,8 @@ app.post('/users', (req, res) => {
 });
 
 //find user by username
-app.get('/users/:Username', (req, res) => {
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), 
+(req, res) => {
   Users.findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
@@ -118,7 +128,8 @@ app.get('/users/:Username', (req, res) => {
 });
 
 //get all users
-app.get('/users', (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false }), 
+(req, res) => {
   Users.find()
     .then((users) => {
       res.status(201).json(users);
@@ -130,7 +141,8 @@ app.get('/users', (req, res) => {
 });
 
 //update user info by user name
-app.put('/users/:userName', (req, res) => {
+app.put('/users/:userName', passport.authenticate('jwt', { session: false }), 
+(req, res) => {
   Users.findOneAndUpdate(
     { Username: req.params.userName },
     {
@@ -157,7 +169,8 @@ app.put('/users/:userName', (req, res) => {
 });
 
   //add movie to user's favorites
-  app.post('/users/:userName/movies/:MovieID', (req, res) => {
+  app.post('/users/:userName/movies/:MovieID', passport.authenticate('jwt', { session: false }), 
+  (req, res) => {
     Users.findOneAndUpdate(
       { Username: req.params.userName },
       {
@@ -180,7 +193,8 @@ app.put('/users/:userName', (req, res) => {
   
 
   // delete movie from favorites
-  app.delete('/users/:userName/movies/:MovieID', (req, res) => {
+  app.delete('/users/:userName/movies/:MovieID', passport.authenticate('jwt', { session: false }), 
+  (req, res) => {
     Users.findOneAndUpdate(
       { Username: req.params.userName },
       {
@@ -202,7 +216,8 @@ app.put('/users/:userName', (req, res) => {
   });
   
   // delete user by username
-  app.delete('/users/:Username', (req, res) => {
+  app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), 
+  (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
       .then((user) => {
         if (!user) {
