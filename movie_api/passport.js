@@ -13,7 +13,8 @@ passport.use(new LocalStrategy({
     passwordField: 'Password'
 }, (username, password, callback) => {
     console.log(username + ' ' + password);
-    Users.findOne({ Username: req.body.Username }).then((user) => {
+    Users.findOne({ Username: username }).exec()
+    .then((user) => {
         if (error) {
             console.log(error);
             return callback(error);
