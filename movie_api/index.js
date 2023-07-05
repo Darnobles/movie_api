@@ -91,7 +91,7 @@ app.get('/movies/directors/:directorsName', passport.authenticate('jwt', { sessi
 });
 
 //add a user
-app.post('/users', passport.authenticate('jwt', { session: false }), 
+app.post('/users', 
 (req, res) => {
   Users.findOne({ Username: req.body.Username }).then((user) => {
     if (user) {
