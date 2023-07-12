@@ -15,6 +15,9 @@ mongoose.connect('mongodb://localhost:27017/cfDB',
   useUnifiedTopology: true 
 });
 
+const cors = require ('cors');
+app.use(cors());
+
 app.use(bodyParser.json());
 let auth = require('./auth')(app);
 
@@ -32,7 +35,7 @@ app.use(morgan('combined', {steam: accessLogScream}));
 app.use(express.static("public"));
 
 
-app.get('/', (req, res) => {
+app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.send('Welcome to Comic Flick!');
 });
 
