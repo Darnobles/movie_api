@@ -54,14 +54,8 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 //get movie by title
 app.get("/movies/:title", passport.authenticate('jwt', { session: false }), 
 (req, res) => {
-    // const { title } = req.params;
     Movies.findOne({ Title: req.params.title})
     .then((movies) => {
-      // if (movie) {
-      //   res.status(200).json(movie);
-      // } else {
-      //   res.status(404).send("Could not find that movie");
-      // }
       res.status(200).json(movies);
     })
     .catch((err) => {
