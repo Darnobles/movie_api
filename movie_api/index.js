@@ -6,6 +6,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
+const { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -54,9 +55,14 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 //get movie by title
 app.get("/movies/:title", passport.authenticate('jwt', { session: false }), 
 (req, res) => {
+    const { title } = req.params;
     Movies.findOne({ Title: req.params.title})
-    .then((movies) => {
-      res.status(200).json(movies);
+    .then((movie) => {
+      if (movie) {
+        res.status(200).json(movie);
+      } else {
+        res.status(404).send("Could not find that movie");
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -89,15 +95,31 @@ app.get('/movies/directors/:directorsName', passport.authenticate('jwt', { sessi
 });
 
 //add a user
-app.post('/users', 
+app.post('/users', [
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.')
+  .isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+],
 (req, res) => {
-  Users.findOne({ Username: req.body.Username }).then((user) => {
+
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  let hashedPassword = Users.hashPassword(req.body.Password);
+  Users.findOne({ Username: req.body.Username })
+  .then((user) => {
+
     if (user) {
       return res.status(400).send(req.body.Username + 'already exists');
     } else {
       Users.create({
         Username: req.body.Username,
-        Password: req.body.Password,
+        Password: hashedPassword,
         Email: req.body.Email,
         Birthday: req.body.Birthday
       })
@@ -139,8 +161,24 @@ app.get('/users', passport.authenticate('jwt', { session: false }),
 });
 
 //update user info by user name
-app.put('/users/:userName', passport.authenticate('jwt', { session: false }), 
+app.put('/users/:userName',
+[
+  check('Username', 'Username is requied').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.')
+  .isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+],
+ passport.authenticate('jwt', { session: false }), 
 (req, res) => {
+  let errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  let hashedPassword = Users.hashPassword(req.body.Password);
+  
   Users.findOneAndUpdate(
     { Username: req.params.userName },
     {
