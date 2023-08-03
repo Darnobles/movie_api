@@ -41,8 +41,12 @@ app.use(morgan('combined', {steam: accessLogScream}));
 app.use(express.static("public"));
 
 
-app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.send('Welcome to Comic Flick!');
+// app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+//     res.send('Welcome to Comic Flick!');
+// });
+
+app.get('/', (req, res) => {
+  res.send('Welcome to Comic Flick!');
 });
 
 //get all movies
@@ -279,6 +283,6 @@ app.use((err, req, res, next) => {
   });
 
 const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0',() => {
-  console.log('Listening on Port' + port);
+app.listen(port,() => {
+  console.log('Listening on Port ' + port );
 });
