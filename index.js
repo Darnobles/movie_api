@@ -11,11 +11,6 @@ const { check, validationResult } = require('express-validator');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-// mongoose.connect('mongodb://localhost:27017/cfDB', 
-// { useNewUrlParser: true, 
-//   useUnifiedTopology: true 
-// });
-
 mongoose.connect(process.env.CONNECTION_URI, 
 { useNewUrlParser: true, 
   useUnifiedTopology: true 
@@ -40,10 +35,6 @@ app.use(morgan('combined', {steam: accessLogScream}));
 
 app.use(express.static("public"));
 
-
-// app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-//     res.send('Welcome to Comic Flick!');
-// });
 
 app.get('/', (req, res) => {
   res.send('Welcome to Comic Flick!');
@@ -172,7 +163,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }),
 //update user info by user name
 app.put('/users/:userName',
 [
-  check('Username', 'Username is requied').isLength({min: 5}),
+  check('Username', 'Username is required').isLength({min: 5}),
   check('Username', 'Username contains non alphanumeric characters - not allowed.')
   .isAlphanumeric(),
   check('Password', 'Password is required').not().isEmpty(),
