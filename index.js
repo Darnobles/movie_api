@@ -23,6 +23,7 @@ let allowedOrigins = [
   "http://testsite.com",
   "http://localhost:1234",
   "https://comicflick.netlify.app",
+  "http://localhost:4200",
 ];
 
 app.use(
