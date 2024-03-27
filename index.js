@@ -113,7 +113,7 @@ app.get(
   "/movies/genres/:genreName",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Movies.find({ "Genre.Name": req.params.genreName })
+    Movies.find({ "genre.Name": req.params.genreName })
       .then((movies) => {
         res.status(200).json(movies);
       })
@@ -131,7 +131,7 @@ app.get(
   "/movies/directors/:directorsName",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Movies.find({ "Director.Name": req.params.directorsName })
+    Movies.find({ "director.Name": req.params.directorsName })
       .then((movies) => {
         res.status(200).json(movies);
       })
